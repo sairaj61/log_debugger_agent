@@ -1,0 +1,3 @@
+Detected NullPointerException at line: 2025-05-24 08:00:02 ERROR NullPointerException at line 56
+Detected NumberFormatException at line: 2025-05-24 08:00:03 ERROR NumberFormatException at line 103
+Detected NullPointerException at line: 2025-05-24 08:00:06 ERROR NullPointerException at line 72

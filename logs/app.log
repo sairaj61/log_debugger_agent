@@ -1,0 +1,5 @@
+2025-05-24 08:00:01 INFO Application started
+2025-05-24 08:00:02 ERROR NullPointerException at line 56
+2025-05-24 08:00:03 ERROR NumberFormatException at line 103
+2025-05-24 08:00:05 INFO User logged in
+2025-05-24 08:00:06 ERROR NullPointerException at line 72

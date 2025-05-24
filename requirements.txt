@@ -1,0 +1,7 @@
+# requirements.txt
+langchain
+openai
+requests
+python-dotenv
+fastapi
+uvicorn
