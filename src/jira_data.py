@@ -1,6 +1,3 @@
-import json
-
-
 def parse_jira_request(data):
     return {
         "id": data["jira_id"],

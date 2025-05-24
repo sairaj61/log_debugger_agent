@@ -2,6 +2,7 @@ import os
 import time
 import threading
 
+
 class LogStreamListener:
     def __init__(self, filepath, callback):
         self.filepath = filepath

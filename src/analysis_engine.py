@@ -20,6 +20,7 @@ Does this log line relate to the Jira context? If yes, return a short reason; ot
 )
 chain = prompt_template | llm | StrOutputParser()
 
+
 def analyze_log_line(line: str, context: dict) -> str | None:
     result = chain.invoke({
         "heading": context.get("heading", ""),

@@ -1,10 +1,12 @@
 import os
 import time
-from fastapi import FastAPI, Request
+
+from fastapi import FastAPI
 from pydantic import BaseModel
+
+from src.analysis_engine import analyze_log_line
 from src.jira_data import parse_jira_request
 from src.log_stream_listener import LogStreamListener
-from src.analysis_engine import analyze_log_line
 
 app = FastAPI()
 LOG_PATH = "logs/app.log"
