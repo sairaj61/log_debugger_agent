@@ -1,11 +1,8 @@
-# analysis_engine.py
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
-
 from langchain_core.prompts import PromptTemplate
+
+from src.llm import get_llm
 
 prompt_template = PromptTemplate(
     input_variables=["jira_id", "heading", "description", "comments", "date", "components", "logs"],
@@ -28,7 +25,7 @@ prompt_template = PromptTemplate(
                 """
 )
 
-chain = prompt_template | llm | StrOutputParser()
+chain = prompt_template | get_llm() | StrOutputParser()
 
 
 def analyze_log_line(line: str, context: dict) -> str | None:
@@ -45,4 +42,3 @@ def analyze_log_line(line: str, context: dict) -> str | None:
     if result.lower() == "no match":
         return None
     return f"Match: {line.strip()} | Reason: {result}"
-
