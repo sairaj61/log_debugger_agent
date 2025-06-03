@@ -7,3 +7,4 @@ pydantic
 tiktoken
 faiss-cpu
 langchain-openai
+langchain_community
