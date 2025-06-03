@@ -55,6 +55,36 @@ Example JSON:
 }
 ```
 
+## API Usage Example
+
+You can analyze logs against a Jira ticket using the following `curl` command:
+
+```bash
+curl --location 'http://localhost:8000/analyze' \
+--header 'Content-Type: application/json' \
+--data '{
+    "jira_id": "LE-1234",
+    "heading": "App crash on login",
+    "description": "Login fails intermittently",
+    "comments": [],
+    "date": "2025-05-24",
+    "components": ["LoginModule"]
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "status": "completed",
+  "matches": [
+    "Match: 2025-05-24 08:00:01 INFO Application started\n2025-05-24 08:00:02 ERROR NullPointerException at line 56\n2025-05-24 08:00:03 ERROR NumberFormatException at line 103\n2025-05-24 08:00:05 INFO User logged in\n2025-05-24 08:00:06 ERROR NullPointerException at line 72 | Reason: YES, the JIRA ticket is justified. The logs indicate multiple errors occurring during the application's operation, specifically during the login process. The presence of `NullPointerException` and `NumberFormatException` errors suggests that there are underlying issues in the code that could lead to the app crashing or login failures. These errors align with the description in the JIRA ticket that mentions intermittent login failures, providing a valid technical reason for the ticket's creation."
+  ],
+  "llm_final_reasoning": {
+    "query": "Given the following JIRA context: {'id': 'LE-1234', 'heading': 'App crash on login', 'description': 'Login fails intermittently', 'comments': [], 'date': '2025-05-24', 'components': ['LoginModule']}. Do the logs support this ticket? Explain.",
+    "result": "Yes, the logs do support the JIRA ticket. The ticket describes an issue with the application crashing or failing during login, and the logs show that there are multiple errors occurring around the time of a user login. Specifically, there are two NullPointerExceptions and a NumberFormatException logged just before and after a user logs in at 08:00:05 on 2025-05-24. These errors could potentially cause the login process to fail intermittently, as described in the ticket."
+  }
+}
 ## File Structure
 
 ```
