@@ -58,6 +58,14 @@ def analyze_jira(jira: JiraRequest):
         if result:
             report_lines.append(result)
 
+    # --- Save output to file ---
+    output_path = os.path.join(OUTPUT_DIR, f"{jira.jira_id}.txt")
+    with open(output_path, "w", encoding="utf-8") as f:
+        for line in report_lines:
+            f.write(line + "\n")
+        f.write("\nFinal Reasoning:\n")
+        f.write(str(final_reasoning))
+
     return {
         "status": "completed",
         "matches": report_lines,
