@@ -89,6 +89,38 @@ curl --location 'http://localhost:8000/analyze' \
 
 
 ```
+## Negative Test Example
+
+You can test a Jira ticket that is **not** supported by the logs using:
+
+```bash
+curl --location 'http://localhost:8000/analyze' \
+--header 'Content-Type: application/json' \
+--data '{
+  "jira_id": "LE-4455",
+  "heading": "Email delivery fails intermittently",
+  "description": "Some transactional emails are not being delivered to end-users. Suspected SMTP timeout.",
+  "comments": ["Observed missing emails for password reset", "SMTP timeout seen occasionally"],
+  "date": "2025-06-03",
+  "components": ["EmailService", "SMTPGateway"]
+}'
+```
+
+### Example Negative Response
+
+```json
+{
+  "status": "completed",
+  "matches": [
+    "Match: 2025-06-03 09:45:01 INFO SwitchManager - Switch SW-221 initialized successfully\n2025-06-03 09:45:02 ERROR NetworkService - Failed to submit switch event for SW-221\n2025-06-03 09:45:03 WARNING EventListener - Event not reported for user ID U-8821\n2025-06-03 09:45:04 DEBUG MetricsLogger - Ping time to switch SW-221: 8ms\n2025-06-03 09:45:05 ERROR NetworkService - Retry failed for switch event SW-221\n2025-06-03 09:45:06 INFO CleanupService - Old event logs purged | Reason: NO, the JIRA ticket is not justified based on the provided logs. The logs do not contain any information related to email delivery, SMTP timeouts, or any issues with the EmailService or SMTPGateway components mentioned in the JIRA ticket. The logs primarily focus on issues related to a network service and switch events, which are unrelated to the email delivery problem described in the ticket. Therefore, there is no valid technical reason in the logs that justifies the creation of the JIRA ticket.",
+    "Match: 2025-06-03 09:45:07 INFO AuthService - Auth token refreshed for user U-8821\n2025-06-03 09:45:08 DEBUG EventProcessor - Processing event for switch SW-009\n2025-06-03 09:45:09 INFO EventProcessor - Event for switch SW-009 successfully submitted\n2025-06-03 09:45:10 ERROR NetworkService - Unexpected disconnect from switch SW-221 | Reason: NO, the JIRA ticket is not justified based on the provided logs. The logs do not contain any information related to email delivery, SMTP timeouts, or any issues with the EmailService or SMTPGateway components. The logs only show activities related to an authentication service, event processing for switches, and a network service disconnect, none of which are relevant to the email delivery issue described in the JIRA ticket."
+  ],
+  "llm_final_reasoning": {
+    "query": "Given the following JIRA context: {'id': 'LE-4455', 'heading': 'Email delivery fails intermittently', 'description': 'Some transactional emails are not being delivered to end-users. Suspected SMTP timeout.', 'comments': ['Observed missing emails for password reset', 'SMTP timeout seen occasionally'], 'date': '2025-06-03', 'components': ['EmailService', 'SMTPGateway']}. Do the logs support this ticket? Explain.",
+    "result": "The logs provided do not directly support the JIRA ticket regarding email delivery failures. The logs focus on issues related to network services and switch events, specifically mentioning problems with switch SW-221 and an unexpected disconnect, as well as a successful event submission for switch SW-009. There is no mention of email delivery issues, SMTP timeouts, or any components related to the EmailService or SMTPGateway in the logs. Therefore, based on the available log entries, there is no evidence to support the email delivery failure described in the JIRA ticket."
+  }
+}
+```
 ## File Structure
 .
 ├── src/
