@@ -1,35 +1,48 @@
 # analysis_engine.py
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
-prompt_template = ChatPromptTemplate.from_template(
-    """Given the Jira context:
-Heading: {heading}
-Description: {description}
-Comments: {comments}
-Components: {components}
+from langchain_core.prompts import PromptTemplate
 
-Evaluate the following log line:
-"{line}"
-
-Does this log line relate to the Jira context? If yes, return a short reason; otherwise return "No match".
-"""
+prompt_template = PromptTemplate(
+    input_variables=["jira_id", "heading", "description", "comments", "date", "components", "logs"],
+    template=
+    """
+                Given the following JIRA ticket and logs, determine if there is a valid technical reason in the logs that justifies the creation of the JIRA ticket.
+                
+                JIRA Ticket:
+                ID: {jira_id}
+                Heading: {heading}
+                Description: {description}
+                Comments: {comments}
+                Date: {date}
+                Components: {components}
+                
+                Logs:
+                {logs}
+                
+                Based on the logs, is this JIRA ticket justified? Provide a clear YES/NO and reasoning.
+                """
 )
+
 chain = prompt_template | llm | StrOutputParser()
 
 
 def analyze_log_line(line: str, context: dict) -> str | None:
     result = chain.invoke({
+        "jira_id": context.get("id", ""),
         "heading": context.get("heading", ""),
         "description": context.get("description", ""),
         "comments": ", ".join(context.get("comments", [])),
+        "date": context.get("date", ""),
         "components": ", ".join(context.get("components", [])),
-        "line": line
+        "logs": line
     }).strip()
 
     if result.lower() == "no match":
         return None
     return f"Match: {line.strip()} | Reason: {result}"
+

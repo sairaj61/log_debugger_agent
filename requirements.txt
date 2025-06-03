@@ -1,7 +1,9 @@
-openai
-langchain
-langchain-openai
 fastapi
 uvicorn
-requests
+langchain
+langchain-openai
 python-dotenv
+pydantic
+tiktoken
+faiss-cpu
+langchain-openai

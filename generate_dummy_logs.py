@@ -1,6 +1,6 @@
 import time
 
-log_file = "logs/app.log"
+log_file = "src/logs/app.log"
 
 with open(log_file, 'w') as f:
     f.write("2025-05-24 08:00:01 INFO Application started\n")
