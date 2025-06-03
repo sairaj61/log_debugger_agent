@@ -63,31 +63,33 @@ You can analyze logs against a Jira ticket using the following `curl` command:
 curl --location 'http://localhost:8000/analyze' \
 --header 'Content-Type: application/json' \
 --data '{
-    "jira_id": "LE-1234",
-    "heading": "App crash on login",
-    "description": "Login fails intermittently",
-    "comments": [],
-    "date": "2025-05-24",
-    "components": ["LoginModule"]
-  }'
+  "jira_id": "LE-3311",
+  "heading": "Switch event submission fails intermittently",
+  "description": "Network system fails to submit or retry switch events. Users also report missing event IDs.",
+  "comments": ["Observed failures on SW-221", "User U-8821 reported missing event"],
+  "date": "2025-06-03",
+  "components": ["NetworkService", "SwitchManager", "EventListener"]
+}'
 ```
 
 ### Example Response
 
 ```json
 {
-  "status": "completed",
-  "matches": [
-    "Match: 2025-05-24 08:00:01 INFO Application started\n2025-05-24 08:00:02 ERROR NullPointerException at line 56\n2025-05-24 08:00:03 ERROR NumberFormatException at line 103\n2025-05-24 08:00:05 INFO User logged in\n2025-05-24 08:00:06 ERROR NullPointerException at line 72 | Reason: YES, the JIRA ticket is justified. The logs indicate multiple errors occurring during the application's operation, specifically during the login process. The presence of `NullPointerException` and `NumberFormatException` errors suggests that there are underlying issues in the code that could lead to the app crashing or login failures. These errors align with the description in the JIRA ticket that mentions intermittent login failures, providing a valid technical reason for the ticket's creation."
-  ],
-  "llm_final_reasoning": {
-    "query": "Given the following JIRA context: {'id': 'LE-1234', 'heading': 'App crash on login', 'description': 'Login fails intermittently', 'comments': [], 'date': '2025-05-24', 'components': ['LoginModule']}. Do the logs support this ticket? Explain.",
-    "result": "Yes, the logs do support the JIRA ticket. The ticket describes an issue with the application crashing or failing during login, and the logs show that there are multiple errors occurring around the time of a user login. Specifically, there are two NullPointerExceptions and a NumberFormatException logged just before and after a user logs in at 08:00:05 on 2025-05-24. These errors could potentially cause the login process to fail intermittently, as described in the ticket."
-  }
+    "status": "completed",
+    "matches": [
+        "Match: 2025-06-03 09:45:01 INFO SwitchManager - Switch SW-221 initialized successfully\n2025-06-03 09:45:02 ERROR NetworkService - Failed to submit switch event for SW-221\n2025-06-03 09:45:03 WARNING EventListener - Event not reported for user ID U-8821\n2025-06-03 09:45:04 DEBUG MetricsLogger - Ping time to switch SW-221: 8ms\n2025-06-03 09:45:05 ERROR NetworkService - Retry failed for switch event SW-221\n2025-06-03 09:45:06 INFO CleanupService - Old event logs purged | Reason: YES, the JIRA ticket is justified. The logs provide clear evidence of the issues described in the ticket. Specifically:\n\n1. The log entry at `2025-06-03 09:45:02` shows an error in the `NetworkService` where it failed to submit a switch event for SW-221, which aligns with the ticket's description of submission failures.\n\n2. The log entry at `2025-06-03 09:45:03` indicates a warning from the `EventListener` that an event was not reported for user ID U-8821, which corresponds to the user-reported issue of missing event IDs mentioned in the ticket.\n\n3. The log entry at `2025-06-03 09:45:05` shows another error where a retry attempt to submit the switch event for SW-221 also failed, supporting the ticket's claim of failed retries.\n\nThese log entries collectively provide a valid technical basis for the issues reported in the JIRA ticket, justifying its creation.",
+        "Match: 2025-06-03 09:45:07 INFO AuthService - Auth token refreshed for user U-8821\n2025-06-03 09:45:08 DEBUG EventProcessor - Processing event for switch SW-009\n2025-06-03 09:45:09 INFO EventProcessor - Event for switch SW-009 successfully submitted\n2025-06-03 09:45:10 ERROR NetworkService - Unexpected disconnect from switch SW-221 | Reason: YES, the JIRA ticket is justified. The logs show an \"ERROR\" entry from the NetworkService indicating an \"Unexpected disconnect from switch SW-221.\" This error aligns with the issue described in the JIRA ticket, where there are failures in submitting or retrying switch events. The specific mention of switch SW-221 in both the ticket and the logs suggests a correlation between the reported problem and the observed error, providing a valid technical reason for the creation of the ticket. Additionally, the user U-8821, who reported missing event IDs, is mentioned in the logs, further supporting the relevance of the ticket."
+    ],
+    "llm_final_reasoning": {
+        "query": "Given the following JIRA context: {'id': 'LE-3311', 'heading': 'Switch event submission fails intermittently', 'description': 'Network system fails to submit or retry switch events. Users also report missing event IDs.', 'comments': ['Observed failures on SW-221', 'User U-8821 reported missing event'], 'date': '2025-06-03', 'components': ['NetworkService', 'SwitchManager', 'EventListener']}. Do the logs support this ticket? Explain.",
+        "result": "Yes, the logs support the JIRA ticket LE-3311. The logs indicate several issues related to switch event submissions and user reports:\n\n1. There are multiple errors related to switch SW-221, including a failure to submit a switch event and a retry failure (2025-06-03 09:45:02 and 2025-06-03 09:45:05).\n2. There is a warning about an event not being reported for user ID U-8821 (2025-06-03 09:45:03), which aligns with the user report of missing event IDs mentioned in the JIRA ticket.\n3. An unexpected disconnect from switch SW-221 is logged (2025-06-03 09:45:10), which could contribute to the intermittent failures described in the ticket.\n\nThese log entries correspond to the issues described in the JIRA ticket, including the components involved (NetworkService, SwitchManager, and EventListener)."
+    }
 }
-## File Structure
+
 
 ```
+## File Structure
 .
 ├── src/
 │   ├── analysis_engine.py     # Log analysis logic using OpenAI

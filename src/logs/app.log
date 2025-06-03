@@ -1,5 +1,10 @@
-2025-05-24 08:00:01 INFO Application started
-2025-05-24 08:00:02 ERROR NullPointerException at line 56
-2025-05-24 08:00:03 ERROR NumberFormatException at line 103
-2025-05-24 08:00:05 INFO User logged in
-2025-05-24 08:00:06 ERROR NullPointerException at line 72
+2025-06-03 09:45:01 INFO SwitchManager - Switch SW-221 initialized successfully
+2025-06-03 09:45:02 ERROR NetworkService - Failed to submit switch event for SW-221
+2025-06-03 09:45:03 WARNING EventListener - Event not reported for user ID U-8821
+2025-06-03 09:45:04 DEBUG MetricsLogger - Ping time to switch SW-221: 8ms
+2025-06-03 09:45:05 ERROR NetworkService - Retry failed for switch event SW-221
+2025-06-03 09:45:06 INFO CleanupService - Old event logs purged
+2025-06-03 09:45:07 INFO AuthService - Auth token refreshed for user U-8821
+2025-06-03 09:45:08 DEBUG EventProcessor - Processing event for switch SW-009
+2025-06-03 09:45:09 INFO EventProcessor - Event for switch SW-009 successfully submitted
+2025-06-03 09:45:10 ERROR NetworkService - Unexpected disconnect from switch SW-221
